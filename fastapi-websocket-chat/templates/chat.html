@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Chat</title>
+    <link href="{{ url_for('static', path='/style.css') }}" rel="stylesheet">
+</head>
+
+<body>
+    <h1>Fastapi-Websocket Chat</h1>
+    <p>USER: <span id="ws-id"></span></p>
+    <ul id="messages"></ul>
+    <form id="messageForm">
+        <input type="text" id="messageText" placeholder="Type your message" autocomplete="off">
+        <button type="submit">Send</button>
+    </form>
+    <script>
+        // Function to retrieve the authentication token
+        async function getAuthToken() {
+            const username = prompt("Enter your username");
+            const password = prompt("Enter your password");
+
+            try {
+                // Send a POST request to your authentication endpoint to get the token
+                const response = await fetch('/auth/signin/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: username,  // Include username in the request body
+                        password: password,
+                    }),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.access_token;
+                } else {
+                    throw new Error('Authentication failed');
+                }
+            } catch (error) {
+                console.error(error);
+                return null;
+            }
+        }
+
+        // Establish the WebSocket connection after getting the authentication token
+        async function connectWebSocket() {
+            const authToken = await getAuthToken();
+
+            if (!authToken) {
+                return;
+            }
+
+            const clientName = prompt("Enter your name");
+            document.querySelector("#ws-id").textContent = clientName;
+
+            const ws = new WebSocket(`ws://localhost:8000/ws/${encodeURIComponent(clientName)}?token=${authToken}`);
+
+            ws.onmessage = function (event) {
+                const messages = document.getElementById('messages');
+                const message = document.createElement('li');
+                const content = document.createTextNode(event.data);
+                message.appendChild(content);
+                messages.appendChild(message);
+            };
+
+            ws.onclose = function (event) {
+                if (event.code === 1000) {
+                    // Normal closure, handle it as needed
+                    console.log('WebSocket connection closed gracefully');
+                } else {
+                    // Handle other closure codes or errors
+                    console.error('WebSocket connection closed with code:', event.code);
+                    // Optionally, you can attempt to reconnect here
+                    // or display a message to the user indicating the connection was lost.
+                }
+            };
+
+            ws.onerror = function (event) {
+                console.error('WebSocket error:', event);
+            };
+
+            // Add an event listener to the message form for sending messages
+            const messageForm = document.getElementById('messageForm');
+            messageForm.addEventListener('submit', function (event) {
+                event.preventDefault(); // Prevent the form from submitting via HTTP
+
+                // Call the sendMessage function to send the message
+                sendMessage();
+            });
+
+            // Define the sendMessage function
+            function sendMessage() {
+                const input = document.getElementById("messageText");
+                ws.send(input.value); // Send the message
+
+                // Clear the input field
+                input.value = '';
+            }
+        }
+
+        // Connect the WebSocket when the page loads
+        window.onload = connectWebSocket;
+    </script>
+</body>
+
+</html>
