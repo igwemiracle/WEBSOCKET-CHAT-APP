@@ -37,6 +37,7 @@
     <div class="edit-nav">
         <h1 class="edit-head">USER: <span id="ws-id"></span></h1>
         <p style="color: #fff; text-align: center;">online</p>
+        <div id="errorMessage" style="color: red; text-align: center;"></div>
 
     </div>
     <ul id="messages">
@@ -50,6 +51,7 @@
         async function getAuthToken() {
             const username = prompt("Enter your username");
             const password = prompt("Enter your password");
+            const errorMessageElement = document.getElementById("errorMessage");
 
             try {
                 // Send a POST request to your authentication endpoint to get the token
@@ -68,6 +70,7 @@
                     const data = await response.json();
                     return data.access_token;
                 } else {
+                    errorMessageElement.textContent = 'Authentication failed';
                     throw new Error('Authentication failed');
                 }
             } catch (error) {
