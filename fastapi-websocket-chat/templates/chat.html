@@ -6,12 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebSocket Chat</title>
     <link href="{{ url_for('static', path='/style.css') }}" rel="stylesheet">
+    <style>
+        .edit-para {
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
     <h1>Fastapi-Websocket Chat</h1>
-    <p>USER: <span id="ws-id"></span></p>
-    <ul id="messages"></ul>
+    <p class="edit-para">USER: <span id="ws-id"></span></p>
+    <ul id="messages">
+    </ul>
     <form id="messageForm">
         <input type="text" id="messageText" placeholder="Type your message" autocomplete="off">
         <button type="submit">Send</button>
