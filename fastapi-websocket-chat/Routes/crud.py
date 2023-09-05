@@ -1,6 +1,7 @@
 from fastapi import Depends, HTTPException, status
+from Models.sqlData import SavedMessage
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, text
+from sqlalchemy import select, text, or_, and_
 from Authenticate.hash_pwd import HashPassword
 from Authenticate.auth import oauth2_scheme
 from Authenticate.jwt_handler import verify_access_token
@@ -41,19 +42,38 @@ async def get_user_by_username(username: str, db: AsyncSession = Depends(get_db)
     return result.scalar()
 
 
-async def findUser(username: str, db: AsyncSession = Depends(get_db)):
-    query = text("SELECT * FROM websocket WHERE username=:username")
-    result = await db.execute(query, {"username": username})
+async def findUser(user: str, db: AsyncSession = Depends(get_db)):
+    query = text("SELECT * FROM users WHERE username=:username")
+    result = await db.execute(query, {"username": user})
     return result.fetchone()
 
 
-async def findRecipient(recipient: str, db: AsyncSession = Depends(get_db)):
-    query = select(User).where(User.username == recipient)
-    result = await db.execute(query)
-    return result.scalar_one_or_none()
+async def getChatHistory(sender: str, recipient: str, db: AsyncSession = Depends(get_db)):
 
+    check_sender = await findUser(user=sender, db=db)
+    if not check_sender:
+        raise HTTPException(status_code=404, detail="Sender does not exist")
 
-async def findSender(sender: str, db: AsyncSession = Depends(get_db)):
-    query = select(User).where(User.username == sender)
-    result = await db.execute(query)
-    return result.scalar_one_or_none()
+    check_recipient = await findUser(user=recipient, db=db)
+    if not check_recipient:
+        raise HTTPException(status_code=404, detail="Recipient does not exist")
+
+    messages = await db.execute(
+        select(SavedMessage.sender_username, SavedMessage.text)
+        .filter(
+            or_(
+                and_(
+                    SavedMessage.sender_username == check_sender.username,
+                    SavedMessage.recipient_username == check_recipient.username
+                ),
+                and_(
+                    SavedMessage.sender_username == check_recipient.username,
+                    SavedMessage.recipient_username == check_sender.username
+                )
+            )
+        )
+    )
+
+    chat_history = [
+        f"{message[0]}: {message[1]}" for message in messages.fetchall()]
+    return chat_history
