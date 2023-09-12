@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from fastapi import HTTPException, status
-from jose import jwt
+import jwt
 from jwt.exceptions import DecodeError
 from ..Database.connection import SECRET_KEY
 from starlette.config import Config
