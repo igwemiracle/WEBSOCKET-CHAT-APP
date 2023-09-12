@@ -1,15 +1,15 @@
 import logging
 from fastapi import FastAPI, WebSocketDisconnect, WebSocket
 from fastapi.staticfiles import StaticFiles
-from manager import ConnectionManager
-from Routes.users import user
+from .manager import ConnectionManager
+from .Routes.users import user
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 app = FastAPI()
 app.include_router(user)
 app.mount("/static",
-          StaticFiles(directory="static"), name="static")
+          StaticFiles(directory="fastapi-websocket-chat/static"), name="static")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

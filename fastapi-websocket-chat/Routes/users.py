@@ -1,13 +1,13 @@
 from fastapi import Depends, HTTPException, Request, APIRouter, status
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
-from Authenticate.hash_pwd import HashPassword
-from Authenticate.jwt_handler import create_access_token
-from Database.connection import get_db
-from Models.schemas import UserCreate, BaseUser, Token
-from Routes.crud import createRegisteredUser, get_user_by_email, findUser
+from ..Authenticate.hash_pwd import HashPassword
+from ..Authenticate.jwt_handler import create_access_token
+from ..Database.connection import get_db
+from ..Models.schemas import UserCreate, BaseUser, Token
+from ..Routes.crud import createRegisteredUser, get_user_by_email, findUser
 
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="fastapi-websocket-chat/templates")
 user = APIRouter()
 HASH = HashPassword()
 

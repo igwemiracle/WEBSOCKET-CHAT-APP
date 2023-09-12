@@ -1,12 +1,12 @@
 from fastapi import Depends, HTTPException, status
-from Models.sqlData import SavedMessage
+from ..Models.sqlData import SavedMessage
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, text, or_, and_
-from Authenticate.hash_pwd import HashPassword
-from Authenticate.auth import oauth2_scheme
-from Authenticate.jwt_handler import verify_access_token
-from Database.connection import get_db
-from Models.sqlData import User
+from ..Authenticate.hash_pwd import HashPassword
+from ..Authenticate.auth import oauth2_scheme
+from ..Authenticate.jwt_handler import verify_access_token
+from ..Database.connection import get_db
+from ..Models.sqlData import User
 
 HASH = HashPassword()
 

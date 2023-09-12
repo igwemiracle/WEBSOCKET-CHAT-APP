@@ -3,11 +3,12 @@ import time
 from fastapi import HTTPException, status
 from jose import jwt
 from jwt.exceptions import DecodeError
-from Database.connection import SECRET_KEY
+from ..Database.connection import SECRET_KEY
 from starlette.config import Config
 
 
 config = Config(".env")
+# algorithms = config.get("ALGORITHM")
 
 
 def create_access_token(username: str, password: str) -> str:
@@ -17,14 +18,14 @@ def create_access_token(username: str, password: str) -> str:
         "exp": datetime.utcnow() + timedelta(hours=1)
     }
     token = jwt.encode(payload, SECRET_KEY,
-                       algorithm=config.get("ALGORITHM"))
+                       algorithm="HS256")
     return token
 
 
 def verify_access_token(token: str) -> dict:
     try:
         decoded_token = jwt.decode(
-            token, SECRET_KEY, algorithms=config.get("ALGORITHM"))
+            token, SECRET_KEY, algorithms="HS256")
         return decoded_token
     except jwt.ExpiredSignatureError:
         raise HTTPException(
