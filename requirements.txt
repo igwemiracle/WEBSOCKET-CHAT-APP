@@ -4,3 +4,5 @@ pydantic
 jinja2
 sqlalchemy
 starlette
+passlib
+jose
