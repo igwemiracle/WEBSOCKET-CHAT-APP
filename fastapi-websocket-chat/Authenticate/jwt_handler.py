@@ -3,7 +3,7 @@ from jwt.exceptions import DecodeError
 from fastapi import HTTPException, status
 from datetime import datetime, timedelta
 from starlette.config import Config
-from ..Database.connection import SECRET_KEY
+from Database.connection import SECRET_KEY
 
 
 config = Config(".env")

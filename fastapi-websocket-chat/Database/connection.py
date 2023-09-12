@@ -1,5 +1,5 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
-from ..Models.sqlData import Base
+from Models.sqlData import Base
 from starlette.config import Config
 
 
