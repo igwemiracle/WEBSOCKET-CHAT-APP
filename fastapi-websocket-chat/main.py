@@ -5,6 +5,7 @@ from manager import ConnectionManager
 from Routes.users import user
 from fastapi.middleware.cors import CORSMiddleware
 
+
 app = FastAPI()
 app.include_router(user)
 app.mount("/static",
