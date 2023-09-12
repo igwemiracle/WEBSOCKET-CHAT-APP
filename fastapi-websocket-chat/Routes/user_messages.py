@@ -1,7 +1,5 @@
 from fastapi import HTTPException
 from sqlalchemy import select, and_
-from datetime import datetime
-from typing import List
 from fastapi import Depends, HTTPException, status, APIRouter
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, or_, and_
