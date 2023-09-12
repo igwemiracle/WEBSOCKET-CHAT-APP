@@ -5,5 +5,5 @@ jinja2
 sqlalchemy
 starlette
 passlib
-python-jose
 PyJWT
+aiosqlite
