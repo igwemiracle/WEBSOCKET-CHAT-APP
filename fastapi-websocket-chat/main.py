@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from manager import ConnectionManager
 from Routes.users import user
 from fastapi.middleware.cors import CORSMiddleware
-
+import uvicorn
 
 app = FastAPI()
 app.include_router(user)
@@ -41,3 +41,6 @@ async def websocket_endpoint(websocket: WebSocket, client_name: str):
     except Exception as e:
         logger.error(f"An error occurred for {client_name}: {str(e)}")
         manager.disconnect(websocket)
+
+if __name__ == "__main__":
+    uvicorn.run(app, host='127.0.0.1', port='8000')
