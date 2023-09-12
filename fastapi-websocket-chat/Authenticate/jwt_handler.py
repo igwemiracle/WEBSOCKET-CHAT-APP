@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-import time
 from fastapi import HTTPException, status
 from jose import jwt
 from jwt.exceptions import DecodeError
