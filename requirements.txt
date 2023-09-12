@@ -1,9 +1,0 @@
-fastapi
-uvicorn
-pydantic
-jinja2
-sqlalchemy
-starlette
-passlib
-PyJWT
-aiosqlite
