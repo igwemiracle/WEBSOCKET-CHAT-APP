@@ -3,7 +3,6 @@ from fastapi import FastAPI, WebSocketDisconnect, WebSocket
 from fastapi.staticfiles import StaticFiles
 from manager import ConnectionManager
 from Routes.users import user
-from Authenticate.auth import authenticate_user, oauth2_scheme
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
